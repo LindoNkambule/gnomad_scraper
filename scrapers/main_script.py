@@ -6,16 +6,17 @@ import argparse
 
 
 def main():
-    parser = argparse.ArgumentParser(description='preimp_qc')
+    parser = argparse.ArgumentParser(description='gnomad_scraper')
     parser.add_argument('--type', type=str, default='variant_id',
                         choices=['variant_id', 'gene_id', 'gene_symbol', 'rsid', 'transcript_id'],
-                        help='Search using: `chrom_pos` (variant), `gene_id, `rsid` (variant) or `transcript_id`.')
-    parser.add_argument('--search-by', type=str, help='Keyword to search by')
+                        help='Search using: `variant_id` (variant), `rsid` (variant), `gene_id`, `gene_symbol`, or'
+                             '`transcript_id`.')
+    parser.add_argument('--search-by', type=str, help='Keyword to query gnomAD browser by')
     parser.add_argument('--ref-genome', type=str, default='GRCh37', choices=['GRCh37', 'GRCh38'],
                         help='Reference genome to use')
     parser.add_argument('--dataset', type=str, default='gnomad_r2_1',
                         choices=['gnomad_r2_1', 'gnomad_r3', 'exac', 'gnomad_r2_1_non_neuro', 'gnomad_r2_1_non_cancer',
-                                 'gnomad_r2_1_non_topmed', 'gnomad_r2_1_controls'], help='Dataset t search from')
+                                 'gnomad_r2_1_non_topmed', 'gnomad_r2_1_controls'], help='Dataset to search from')
 
     args = parser.parse_args()
 
