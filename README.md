@@ -1,17 +1,13 @@
 # gnomAD scraper
 
-Query information by variant ID, rsid, transcript, or gene name from the gnomAD browser using the gnomAD API.
+Query information by variant ID, rsid, transcript ID, or gene ID/Symbol from the gnomAD browser using the gnomAD API.
 
 ## Installation
 
-Clone the repo and install gnomad_scraper and the required packages.
+Install gnomad_scraper directly from GitHub.
 
 ```bash
-git clone https://github.com/LindoNkambule/gnomad_scraper.git
-cd gnomad_scraper/
-pip3 install -r requirements.txt
-python3 setup.py sdist
-pip3 install dist/gnomad_scraper-0.1.0.tar.gz
+pip3 install git+https://github.com/LindoNkambule/gnomad_scraper.git
 ```
 
 ## Usage
