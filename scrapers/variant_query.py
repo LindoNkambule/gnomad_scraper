@@ -10,7 +10,8 @@ from tabulate import tabulate
 def print_variant_sum(stats: dict = None):
     var_id = stats['data']['variant']['variantId']
     ref = stats['data']['variant']['reference_genome']
-    print(f'Variant ID: {var_id}\nReference Genome: {ref}')
+    rsids = stats['data']['variant']['rsids']
+    print(f'Variant ID: {var_id}\nReference Genome: {ref}\nRSIDS: {rsids}')
 
     ex_gen = ['exome', 'genome']
 
@@ -42,12 +43,13 @@ def print_variant_sum(stats: dict = None):
     print(tabulate([l1, l2, l3, l4], headers=['', 'Exomes', 'Genomes']))
 
 
-def variant_scraper(gnomad_api: str = None, gnomad_dataset: str = 'gnomad_r2_1', variant_id: str = None):
-    # query gnomad
+def variant_scraper(gnomad_api: str = None, search_type: str = None, search_term: str = None,
+                    gnomad_dataset: str = 'gnomad_r2_1'):
     query_variant_id = """
     {
-    variant(variantId: "%s", dataset: %s) {
+    variant(%s: "%s", dataset: %s) {
         variantId
+        rsids
         reference_genome
         
         exome {
@@ -68,7 +70,7 @@ def variant_scraper(gnomad_api: str = None, gnomad_dataset: str = 'gnomad_r2_1',
     }
     """
 
-    query = query_variant_id % (variant_id, gnomad_dataset)
+    query = query_variant_id % (search_type, search_term, gnomad_dataset)
 
     response = requests.post(gnomad_api, data={'query': query})
 

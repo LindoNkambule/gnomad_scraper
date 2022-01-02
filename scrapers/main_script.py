@@ -7,8 +7,8 @@ import argparse
 
 def main():
     parser = argparse.ArgumentParser(description='preimp_qc')
-    parser.add_argument('--type', type=str, default='chrom_pos',
-                        choices=['chrom_pos', 'gene_id', 'gene_symbol', 'rsid', 'transcript_id'],
+    parser.add_argument('--type', type=str, default='variant_id',
+                        choices=['variant_id', 'gene_id', 'gene_symbol', 'rsid', 'transcript_id'],
                         help='Search using: `chrom_pos` (variant), `gene_id, `rsid` (variant) or `transcript_id`.')
     parser.add_argument('--search-by', type=str, help='Keyword to search by')
     parser.add_argument('--ref-genome', type=str, default='GRCh37', choices=['GRCh37', 'GRCh38'],
@@ -25,17 +25,29 @@ def main():
     datasets = ['gnomad_r2_1', 'gnomad_r3', 'exac', 'gnomad_r2_1_non_neuro', 'gnomad_r2_1_non_cancer',
                 'gnomad_r2_1_non_topmed', 'gnomad_r2_1_controls']
 
-    # Main
     gnomad_api = 'https://gnomad.broadinstitute.org/api/'
 
-    if args.type == 'chrom_pos':
+    # Query VARIANT by Variant ID or RSID
+    if args.type == 'variant_id' or args.type == 'rsid':
         from scrapers.variant_query import variant_scraper
+
+        if args.type == 'variant_id':
+            type_query = 'variantId'
+        else:
+            type_query = 'rsid'
+
+        # def variant_scraper(gnomad_api: str = None, search_type: str = None, search_term: str = None,
+        #                     gnomad_dataset: str = 'gnomad_r2_1'):
+
         if not args.search_by:
             variant_search_id = '1-55516888-G-GA'
-            variant_scraper(gnomad_api=gnomad_api, gnomad_dataset=args.dataset, variant_id=variant_search_id)
+            variant_scraper(gnomad_api=gnomad_api, search_type=type_query, search_term=variant_search_id,
+                            gnomad_dataset=args.dataset)
         else:
-            variant_scraper(gnomad_api=gnomad_api, gnomad_dataset=args.dataset, variant_id=args.search_by)
+            variant_scraper(gnomad_api=gnomad_api, search_type=type_query, search_term=args.search_by,
+                            gnomad_dataset=args.dataset)
 
+    # Query TRANSCRIPT by TRANSCRIPT ID
     elif args.type == 'transcript_id':
         from scrapers.transcript_query import transcript_scraper
         if not args.search_by:
@@ -44,6 +56,7 @@ def main():
         else:
             transcript_scraper(gnomad_api=gnomad_api, transcript_id=args.search_by, ref_genome=args.ref_genome)
 
+    # Query GENE by GENE ID or GENE SYMBOL/NAME
     elif args.type == 'gene_id' or args.type == 'gene_symbol':
         from scrapers.gene_query import gene_scraper
         if not args.search_by:
